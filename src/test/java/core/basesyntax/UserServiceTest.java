@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -46,7 +47,8 @@ public class UserServiceTest {
         try {
             Class.forName(EXCEPTION_CLASS);
         } catch (ClassNotFoundException e) {
-            Assert.fail("You should create class called 'UserNotFoundException' inside of 'exception' package");
+            Assert.fail("You should create class called 'UserNotFoundException' inside of " +
+                    "'exception' package");
         }
     }
 
@@ -56,6 +58,27 @@ public class UserServiceTest {
             Class<?> runtimeClass = Class.forName(EXCEPTION_CLASS).getSuperclass();
             Assert.assertEquals("Your own exception should be unchecked",
                     runtimeClass, RuntimeException.class);
+        } catch (ClassNotFoundException e) {
+            Assert.fail("You should create class called 'UserNotFoundException' inside of " +
+                    "'exception' package");
+        }
+    }
+
+    @Test
+    public void exceptionClassHasConstructorWithString() {
+        try {
+            boolean containsConstructorWithParameter = false;
+            Class<?> customExceptionClass = Class.forName(EXCEPTION_CLASS);
+            Constructor<?>[] constructors = customExceptionClass.getConstructors();
+            for (Constructor constructor : constructors) {
+                Class[] parameterTypes = constructor.getParameterTypes();
+                if(containsConstructorWithParameter
+                        = Arrays.asList(parameterTypes).contains(String.class)){
+                    break;
+                }
+            }
+            Assert.assertTrue("Don't hardcode the message in the exception class, " +
+                    "let's pass it to constructor", containsConstructorWithParameter);
         } catch (ClassNotFoundException e) {
             Assert.fail("You should create class called 'UserNotFoundException' inside of " +
                     "'exception' package");
