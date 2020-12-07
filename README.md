@@ -1,7 +1,7 @@
 # jv-user-score
 
 In this task you have `UserService` class with `getUserScore()` method.
-Method receives two parameters: arrays of strings `records` and single string element
+Method receives two parameters: an array of strings `records` and a single string element
 `email`. 
 
 `records` represent database of users, each user has two parameters - 
